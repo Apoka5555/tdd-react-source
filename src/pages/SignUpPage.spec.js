@@ -1,10 +1,10 @@
 import SignUpPage from "./SignUpPage";
 import {
-  screen,
   render,
+  screen,
   waitFor,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from "../test/setup";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
@@ -213,12 +213,7 @@ describe("Sign Up Page", () => {
   describe("Internationalization", () => {
     let turkishToggle, englishToggle, passwordInput, passwordRepeatInput;
     const setup = () => {
-      render(
-        <>
-          <SignUpPage />
-          <LanguageSelector />
-        </>
-      );
+      render(<SignUpPage />);
       turkishToggle = screen.getByTitle("Türkçe");
       englishToggle = screen.getByTitle("English");
       passwordInput = screen.getByLabelText("Password");
