@@ -165,3 +165,26 @@ describe("Routing", () => {
     expect(page).toBeInTheDocument();
   });
 });
+
+describe("Login", () => {
+  const setupLoggedIn = () => {
+    setup("/login");
+    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
+    userEvent.click(screen.getByRole("button", { name: "Login" }));
+  };
+
+  it("redirects to homepage after successful login", async () => {
+    setupLoggedIn();
+    const page = await screen.findByTestId("home-page");
+    expect(page).toBeInTheDocument();
+  });
+  it("hides Login and Sign Up from navbar after successful login", async () => {
+    setupLoggedIn();
+    await screen.findByTestId("home-page");
+    const loginLink = screen.queryByRole("link", { name: "Login" });
+    const signUpLink = screen.queryByRole("link", { name: "Sign Up" });
+    expect(loginLink).not.toBeInTheDocument();
+    expect(signUpLink).not.toBeInTheDocument();
+  });
+});
