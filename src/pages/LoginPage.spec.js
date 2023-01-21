@@ -133,6 +133,27 @@ describe("Login Page", () => {
       userEvent.type(passwordInput, "newP4ss");
       expect(errorMessage).not.toBeInTheDocument();
     });
+    it("stores id, username and image in storage", async () => {
+      server.use(loginSuccess);
+      setup("user5@mail.com");
+      userEvent.click(button);
+      const spinner = screen.queryByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      const storedState = storage.getItem("auth");
+      const objectFields = Object.keys(storedState);
+      expect(objectFields.includes("id")).toBeTruthy();
+      expect(objectFields.includes("username")).toBeTruthy();
+      expect(objectFields.includes("image")).toBeTruthy();
+    });
+    it("stores authorization header value in storage", async () => {
+      server.use(loginSuccess);
+      setup("user5@mail.com");
+      userEvent.click(button);
+      const spinner = screen.queryByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      const storedState = storage.getItem("auth");
+      expect(storedState.header).toBe("Bearer abcdefgh");
+    });
   });
 
   describe("Internationalization", () => {
@@ -164,7 +185,7 @@ describe("Login Page", () => {
       expect(screen.getByLabelText(tr.email)).toBeInTheDocument();
       expect(screen.getByLabelText(tr.password)).toBeInTheDocument();
     });
-    it("sets accpet language header to en for outgoing request", async () => {
+    it("sets accept language header to en for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
@@ -176,7 +197,7 @@ describe("Login Page", () => {
       await waitForElementToBeRemoved(spinner);
       expect(acceptLanguageHeader).toBe("en");
     });
-    it("sets accpet language header to tr for outgoing request", async () => {
+    it("sets accept language header to tr for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
