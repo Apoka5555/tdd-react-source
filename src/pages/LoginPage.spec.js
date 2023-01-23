@@ -88,6 +88,7 @@ describe("Login Page", () => {
       setup();
       expect(button).toBeEnabled();
     });
+
     it("displays spinner during api call", async () => {
       setup();
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
@@ -155,13 +156,13 @@ describe("Login Page", () => {
       expect(storedState.header).toBe("Bearer abcdefgh");
     });
   });
-
   describe("Internationalization", () => {
     let turkishToggle;
     const setup = () => {
       render(<LoginPage />);
       turkishToggle = screen.getByTitle("Türkçe");
     };
+
     it("initially displays all text in English", () => {
       setup();
       expect(
@@ -176,6 +177,7 @@ describe("Login Page", () => {
     it("displays all text in Turkish after changing the language", () => {
       setup();
       userEvent.click(turkishToggle);
+
       expect(
         screen.getByRole("heading", { name: tr.login })
       ).toBeInTheDocument();
@@ -185,7 +187,7 @@ describe("Login Page", () => {
       expect(screen.getByLabelText(tr.email)).toBeInTheDocument();
       expect(screen.getByLabelText(tr.password)).toBeInTheDocument();
     });
-    it("sets accept language header to en for outgoing request", async () => {
+    it("sets accpet language header to en for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
@@ -197,7 +199,7 @@ describe("Login Page", () => {
       await waitForElementToBeRemoved(spinner);
       expect(acceptLanguageHeader).toBe("en");
     });
-    it("sets accept language header to tr for outgoing request", async () => {
+    it("sets accpet language header to tr for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");

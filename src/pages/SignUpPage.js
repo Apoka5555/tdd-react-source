@@ -1,10 +1,9 @@
 import { Component } from "react";
-import axios from "axios";
-import { withTranslation } from "react-i18next";
 import Input from "../components/Input";
+import { withTranslation } from "react-i18next";
+import { signUp } from "../api/apiCalls";
 import Alert from "../components/Alert";
 import ButtonWithProgress from "../components/ButtonWithProgress";
-import { signUp } from "../api/apiCalls";
 
 class SignUpPage extends Component {
   state = {
@@ -52,7 +51,6 @@ class SignUpPage extends Component {
     let disabled = true;
     const { password, passwordRepeat, apiProgress, signUpSuccess, errors } =
       this.state;
-
     if (password && passwordRepeat) {
       disabled = password !== passwordRepeat;
     }

@@ -33,6 +33,7 @@ describe("Account Activation Page", () => {
     const message = await screen.findByText("Account is activated");
     expect(message).toBeInTheDocument();
   });
+
   it("sends activation request to backend", async () => {
     setup("1234");
     await screen.findByText("Account is activated");
@@ -52,6 +53,7 @@ describe("Account Activation Page", () => {
     await screen.findByText("Activation failure");
     expect(counter).toBe(2);
   });
+
   it("displays spinner during activation api call", async () => {
     setup("5678");
     const spinner = screen.getByRole("status");

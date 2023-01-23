@@ -1,6 +1,6 @@
 import { render, screen } from "./test/setup";
-import userEvent from "@testing-library/user-event";
 import App from "./App";
+import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import storage from "./state/storage";
@@ -179,6 +179,7 @@ describe("Login", () => {
     const page = await screen.findByTestId("home-page");
     expect(page).toBeInTheDocument();
   });
+
   it("hides Login and Sign Up from navbar after successful login", async () => {
     setupLoggedIn();
     await screen.findByTestId("home-page");
@@ -227,4 +228,88 @@ describe("Login", () => {
     });
     expect(myProfileLink).toBeInTheDocument();
   });
+  it("refreshes user page from another user to the logged in user after clicking My Profile", async () => {
+    storage.setItem("auth", { id: 5, username: "user5", isLoggedIn: true });
+    setup("/");
+    const user = await screen.findByText("user-in-list");
+    userEvent.click(user);
+    await screen.findByRole("heading", { name: "user-in-list" });
+    const myProfileLink = screen.queryByRole("link", {
+      name: "My Profile",
+    });
+    userEvent.click(myProfileLink);
+    const user5 = await screen.findByRole("heading", { name: "user5" });
+    expect(user5).toBeInTheDocument();
+  });
 });
+
+describe("Logout", () => {
+  let logoutLink;
+  const setupLoggedIn = () => {
+    storage.setItem("auth", {
+      id: 5,
+      username: "user5",
+      isLoggedIn: true,
+      header: "auth header value",
+    });
+    setup("/");
+    logoutLink = screen.queryByRole("link", {
+      name: "Logout",
+    });
+  };
+  it("displays Logout link on navbar after successful login", () => {
+    setupLoggedIn();
+    expect(logoutLink).toBeInTheDocument();
+  });
+  it("displays login and sign up on navbar after clicking logout", async () => {
+    setupLoggedIn();
+    userEvent.click(logoutLink);
+    const loginLink = await screen.findByRole("link", { name: "Login" });
+    expect(loginLink).toBeInTheDocument();
+  });
+  it("sends logout request to backend after clicking logout", async () => {
+    setupLoggedIn();
+    userEvent.click(logoutLink);
+    await screen.findByRole("link", { name: "Login" });
+    expect(logoutCount).toBe(1);
+  });
+  it("removes authorization header from requests after user logs out", async () => {
+    setupLoggedIn();
+    userEvent.click(logoutLink);
+    await screen.findByRole("link", { name: "Login" });
+    const user = await screen.findByText("user-in-list");
+    userEvent.click(user);
+    await screen.findByRole("heading", { name: "user-in-list" });
+    expect(header).toBeFalsy();
+  });
+});
+
+describe("Delete User", () => {
+  let deleteButton;
+  const setupLoggedInUserPage = async () => {
+    storage.setItem("auth", {
+      id: 5,
+      username: "user5",
+      isLoggedIn: true,
+      header: "auth header value",
+    });
+    setup("/user/5");
+    deleteButton = await screen.findByRole("button", {
+      name: "Delete My Account",
+    });
+  };
+  it("redirects to homepage after deleting user", async () => {
+    await setupLoggedInUserPage();
+    userEvent.click(deleteButton);
+    userEvent.click(screen.queryByRole("button", { name: "Yes" }));
+    await screen.findByTestId("home-page");
+  });
+  it("displays login and sign up on navbar after deleting user", async () => {
+    await setupLoggedInUserPage();
+    userEvent.click(deleteButton);
+    userEvent.click(screen.queryByRole("button", { name: "Yes" }));
+    await screen.findByRole("link", { name: "Login" });
+  });
+});
+
+console.error = () => {};

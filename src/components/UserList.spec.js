@@ -1,8 +1,8 @@
 import { render, screen } from "../test/setup";
-import userEvent from "@testing-library/user-event";
 import UserList from "./UserList";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import userEvent from "@testing-library/user-event";
 import en from "../locale/en.json";
 import tr from "../locale/tr.json";
 import storage from "../state/storage";
@@ -151,8 +151,17 @@ describe("User List", () => {
       await screen.findByText("user1");
       expect(spinner).not.toBeInTheDocument();
     });
+    it("sends request with authroization header", async () => {
+      storage.setItem("auth", {
+        id: 5,
+        username: "user5",
+        header: "auth header value",
+      });
+      setup();
+      await screen.findByText("user1");
+      expect(header).toBe("auth header value");
+    });
   });
-
   describe("Internationalization", () => {
     beforeEach(() => {
       server.use(

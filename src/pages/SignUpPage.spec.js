@@ -80,7 +80,6 @@ describe("Sign Up Page", () => {
       expect(button).toBeDisabled();
     });
   });
-
   describe("Interactions", () => {
     let button, usernameInput, emailInput, passwordInput, passwordRepeatInput;
 
@@ -174,6 +173,7 @@ describe("Sign Up Page", () => {
       const validationError = await screen.findByText(message);
       expect(validationError).toBeInTheDocument();
     });
+
     it("hides spinner and enables button after response received", async () => {
       server.use(
         generateValidationError("username", "Username cannot be null")
@@ -208,7 +208,6 @@ describe("Sign Up Page", () => {
       }
     );
   });
-
   describe("Internationalization", () => {
     let turkishToggle, englishToggle, passwordInput, passwordRepeatInput;
     const setup = () => {
