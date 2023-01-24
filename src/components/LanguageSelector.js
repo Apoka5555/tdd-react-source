@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import englandIcon from "../assets/united-kingdom.png";
+import turkeyIcon from "../assets/turkey.png";
 
 const LanguageSelector = (props) => {
   const { i18n } = useTranslation();
@@ -6,16 +8,22 @@ const LanguageSelector = (props) => {
   return (
     <>
       <img
-        src="https://www.countryflags.io/tr/flat/24.png"
+        src={turkeyIcon}
         title="Türkçe"
         onClick={() => i18n.changeLanguage("tr")}
         alt="Turkish Flag"
+        width={24}
+        height={24}
+        style={{ cursor: "pointer", marginRight: "5px" }}
       />
       <img
-        src="https://www.countryflags.io/gb/flat/24.png"
+        src={englandIcon}
         title="English"
         onClick={() => i18n.changeLanguage("en")}
         alt="Great Britain Flag"
+        width={24}
+        height={24}
+        style={{ cursor: "pointer" }}
       />
     </>
   );
