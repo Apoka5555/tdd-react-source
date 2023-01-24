@@ -187,7 +187,7 @@ describe("Login Page", () => {
       expect(screen.getByLabelText(tr.email)).toBeInTheDocument();
       expect(screen.getByLabelText(tr.password)).toBeInTheDocument();
     });
-    it("sets accpet language header to en for outgoing request", async () => {
+    it("sets accept language header to en for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
@@ -199,7 +199,7 @@ describe("Login Page", () => {
       await waitForElementToBeRemoved(spinner);
       expect(acceptLanguageHeader).toBe("en");
     });
-    it("sets accpet language header to tr for outgoing request", async () => {
+    it("sets accept language header to tr for outgoing request", async () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
